@@ -1,11 +1,11 @@
-package edu.ib;
+package edu.ib.repo.entity;
 
 import javax.persistence.*;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "groups_database")
 public class Group {
 
     @Id
@@ -13,9 +13,9 @@ public class Group {
     private Long id_group;
 
     private String name;
-    private Long picture_id;
+    private int picture_id;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.MERGE)
     @JoinTable(
             name = "groups_users",
             joinColumns = @JoinColumn(name = "id_group"),
@@ -23,26 +23,13 @@ public class Group {
     )
     private Set<User> users;
 
-    public Group(String name, Long picture_id, Set<User> users) {
-        this.name = name;
-        this.picture_id = picture_id;
-        this.users = users;
-    }
-
     public Group() {
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return id_group.equals(group.id_group) && name.equals(group.name) && picture_id.equals(group.picture_id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id_group, name, picture_id);
+    public Group(String name, int picture_id, Set<User> users) {
+        this.name = name;
+        this.picture_id = picture_id;
+        this.users = users;
     }
 
     public Long getId_group() {
@@ -61,11 +48,19 @@ public class Group {
         this.name = name;
     }
 
-    public Long getPicture_id() {
+    public int getPicture_id() {
         return picture_id;
     }
 
-    public void setPicture_id(Long picture_id) {
+    public void setPicture_id(int picture_id) {
         this.picture_id = picture_id;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

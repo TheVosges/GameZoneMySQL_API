@@ -1,6 +1,7 @@
-package edu.ib;
+package edu.ib.repo.entity;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -15,18 +16,28 @@ public class User {
     private String email;
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    private UserGame userGame;
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @PrimaryKeyJoinColumn
+//    private UserGame userGame;
 
     @Transient
-    @ManyToMany(mappedBy = "id_group")
+    @ManyToMany(cascade = CascadeType.MERGE)
     private Set<Group> groups;
+
+    @Transient
+    @ManyToMany(cascade = CascadeType.MERGE)
+    private Set<Game> games;
+
+//    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name="user_followers")
+//    private Set<Followers> followers;
 
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        this.groups = new HashSet<>();
+        this.games = new HashSet<>();
     }
 
     public User() {
@@ -56,6 +67,22 @@ public class User {
         this.password = password;
     }
 
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
+
+    public Set<Game> getGames() {
+        return games;
+    }
+
+    public void setGames(Set<Game> games) {
+        this.games = games;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,8 +102,6 @@ public class User {
                 "id_user=" + id_user +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", userGame=" + userGame +
-                ", groups=" + groups +
                 '}';
     }
 }
