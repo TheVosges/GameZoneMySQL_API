@@ -13,10 +13,7 @@ import javax.persistence.PersistenceContext;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class GroupManager {
@@ -39,6 +36,18 @@ public class GroupManager {
 
     public Iterable<Group> findAllGroups(){
         return groupRepo.findAll();
+    }
+    
+    public Iterable<Group> findAllGroupsByUserId(Long userId){
+        Iterable<Group> groups = groupRepo.findAll();
+        List <Group> usersGroups = new ArrayList<>();
+        for (Group group: groups){
+            Set <User> groupUsers = group.getUsers();
+            for (User user: groupUsers){
+                if (user.getId_user().equals(userId)) usersGroups.add(group);
+            }
+        }
+        return usersGroups;
     }
 
     public Group save(Group group){
@@ -64,10 +73,6 @@ public class GroupManager {
         }
 
         return groupRepo.save(old);
-    }
-
-    public Optional<User> findGameById(Long id) {
-        return userRepo.findById(id);
     }
 
     public void addGroup(String name, int pic_id, Long user_id){

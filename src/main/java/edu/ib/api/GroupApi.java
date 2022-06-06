@@ -3,17 +3,10 @@ package edu.ib.api;
 import edu.ib.manager.GroupManager;
 import edu.ib.manager.UserManager;
 import edu.ib.repo.entity.Group;
-import edu.ib.repo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -28,9 +21,15 @@ public class GroupApi {
     }
 
     @GetMapping("/group/all")
-    public Iterable<Group> getAllOrders() {
+    public Iterable<Group> getAllGroups() {
         return groupManager.findAllGroups();
     }
+
+    @GetMapping("/group/user/")
+    public Iterable<Group> getAllGroupsOfUser(@RequestParam long user_id) {
+        return groupManager.findAllGroupsByUserId(user_id);
+    }
+
 
     @GetMapping("/group")
     public Optional<Group> getGroupById(@RequestParam Long id) {

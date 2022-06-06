@@ -5,6 +5,7 @@ import edu.ib.repo.*;
 import edu.ib.repo.entity.Game;
 import edu.ib.repo.entity.Group;
 import edu.ib.repo.entity.User;
+
 //import edu.ib.repo.entity.UserGame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -24,13 +25,15 @@ public class Start {
     private EntityManager em;
 
     private final UserRepo userRepo;
+   // private final UserGameRepo userGameRepo;
     private final GameRepo gameRepo;
     private final GroupRepo groupRepo;
     private int logged_user;
 
     @Autowired
-    public Start(UserRepo userRepo, GroupRepo groupRepo, GameRepo gameRepo) {
+    public Start(UserRepo userRepo, GroupRepo groupRepo, GameRepo gameRepo) {//UserGameRepo userGameRepo
         this.userRepo = userRepo;
+       // this.userGameRepo = userGameRepo;
         this.gameRepo = gameRepo;
         this.groupRepo = groupRepo;
         this.logged_user = 0;
@@ -83,7 +86,8 @@ public class Start {
                     "4. Dodaj grupę \n" +
                     "5. Dodaj gre \n" +
                     "6. Przypisz gre do uzytkwnika \n" +
-                    "7. Pokaz gry do uzytkwnika \n"
+                    "7. Pokaz gry do uzytkwnika  \n"
+          //          "8. Pokaz tabele gier uzytkwnkow \n"
 
                     );
             BufferedReader reader = new BufferedReader(
@@ -119,6 +123,9 @@ public class Start {
                     case 7:
                         selectUserGames();
                         break;
+//                    case 8:
+//                        showAllUserGames();
+//                        break;
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -244,7 +251,6 @@ public class Start {
     }
 
 
-
     public void selectUserGames(){
         //TODO zwykly select z tabeli z grami na podstawie id usera i tabeli z relacja gra-user
         // 1 wyciagnac wszystkie id gier z games_users dla danego usera
@@ -254,16 +260,16 @@ public class Start {
         try {
             System.out.println("Podaj id usera: ");
             String user_id = bufferedReader.readLine();
-            List<Integer> userGamesIds = em
-                    .createNativeQuery("SELECT * FROM games_users where id_user = :v_user_id);")
-                    .setParameter(":v_user_id", user_id)
+            List<Long> userGamesIds = em
+                    .createNativeQuery("SELECT id_game FROM users_games where id_user =  ?;")
+                    .setParameter(1, user_id)
                     .getResultList();
             System.out.println("id gier uzytkownika: ");
-            System.out.println(userGamesIds.toArray().toString());
+            userGamesIds.forEach(System.out::println);
 
 // 2 wydrukowac
             Game userGame;
-            for (int game_id: userGamesIds) {
+            for (long game_id: userGamesIds) {
                 userGame = new Game(String.valueOf(em.createNativeQuery("SELECT name FROM games where id_game = :v_id_game);")
                        .setParameter(":v_id_game", game_id).getFirstResult()));
                 System.out.println(userGame.getName());
@@ -277,3 +283,15 @@ public class Start {
     }
 
 }
+
+ //   public void showAllUserGames(){
+//       // Iterable<UserGame> all = userGameRepo.findAll();
+//      //  all.forEach(System.out::println);
+//
+////
+////        List<Integer> userGames = em
+////                .createNativeQuery("SELECT user_id FROM users_games;")
+////                .getResultList();
+////        System.out.println("id uzytkownikow ktorzy maja gry: ");
+////        userGames.forEach(System.out::println);
+//    }
