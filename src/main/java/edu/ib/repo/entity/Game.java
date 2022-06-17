@@ -17,13 +17,17 @@ public class Game {
         this.name = name;
     }
 
-    @ManyToMany(cascade = CascadeType.MERGE)
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinTable(
             name = "users_games",
-            joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns =@JoinColumn(name = "id_game")
+            joinColumns = @JoinColumn(name = "id_user", referencedColumnName = "id_game"),
+            inverseJoinColumns =@JoinColumn(name = "id_game", referencedColumnName = "id_user")
     )
-    private Set<User> users;
+    private Set<User> users = new java.util.LinkedHashSet<>();
+
+    public Set<User> getUsers() {
+        return users;
+    }
 
 
     public Game() {

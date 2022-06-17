@@ -118,4 +118,14 @@ public class GameManager {
 //            return userRepo.save(user);
 //        }
 
+    public void deleteUserGames(Long game_id, Long logged_user_id) {
+
+        Game game = gameRepo.findById(game_id).get();
+        User user = userRepo.findById(logged_user_id).get();
+        List<Integer> columns = em
+                .createNativeQuery("SELECT delete_game_from_user(:user_iden, :game_iden);")
+                .setParameter("user_iden", logged_user_id).setParameter("game_iden", game_id)
+                .getResultList();
+    }
+
 }

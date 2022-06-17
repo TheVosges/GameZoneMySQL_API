@@ -30,4 +30,14 @@ public class UserApi {
     public void addUser(@RequestParam String email, String password) {
         userManager.addUser(email, password);
     }
+
+    @PostMapping("/usersusers/add")
+    public void addUsersFriend(@RequestParam Long friend_id, Long user_id) {
+        userManager.addFriendToUser(friend_id, user_id);
+    }
+
+    @DeleteMapping("/usersusers/delete")
+    public void deleteUsersGame(@RequestParam Long friend_id, Long user_id) {
+        userManager.deleteUserFriend(friend_id, user_id);
+    }
 }

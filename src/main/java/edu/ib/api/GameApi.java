@@ -46,6 +46,11 @@ public class GameApi {
         gameManager.addGame(game_name);
     }
 
+    @DeleteMapping("/usersgames/delete")
+    public void deleteUsersGame(@RequestParam Long game_id, Long user_id) {
+        gameManager.deleteUserGames(game_id, user_id);
+    }
+
 //    @PutMapping("/admin/game")
 //    public Game updateGame(@RequestBody Game game){
 //        return gameManager.save(game);
