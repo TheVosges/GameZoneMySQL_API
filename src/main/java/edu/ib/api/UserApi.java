@@ -1,6 +1,7 @@
 package edu.ib.api;
 
 import edu.ib.manager.UserManager;
+import edu.ib.repo.entity.Game;
 import edu.ib.repo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,5 +40,10 @@ public class UserApi {
     @DeleteMapping("/usersusers/delete")
     public void deleteUsersGame(@RequestParam Long friend_id, Long user_id) {
         userManager.deleteUserFriend(friend_id, user_id);
+    }
+
+    @GetMapping("/usersusers/all")
+    public Iterable<User> getAllGames(@RequestParam Long user_id) {
+        return userManager.selectUserFriends(user_id);
     }
 }
